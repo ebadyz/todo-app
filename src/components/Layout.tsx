@@ -1,11 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react";
-import LeftSideBar from "./LeftSideBar";
+import LeftSideBar from "./LeftSideBar.d";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-function Layout({ children }: LayoutProps) {
+function Layout({ children }: LayoutProps): JSX.Element {
   return (
     <Box display="grid" placeItems="center" h="100vh">
       <header>
