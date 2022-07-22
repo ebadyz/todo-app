@@ -1,11 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react";
-import LeftSideBar from "./LeftSideBar.d";
 
-interface LayoutProps {
+interface ILayoutProps {
   children: React.ReactNode;
+  leftSideBar: React.ReactElement;
 }
 
-function Layout({ children }: LayoutProps): JSX.Element {
+function Layout({ children, leftSideBar }: ILayoutProps): JSX.Element {
   return (
     <Box display="grid" placeItems="center" h="100vh">
       <header>
@@ -19,8 +19,10 @@ function Layout({ children }: LayoutProps): JSX.Element {
         borderColor="yellow.500"
         mx="auto"
       >
-        <LeftSideBar />
-        <Box as="main">{children}</Box>
+        {leftSideBar}
+        <Box as="main" p="8" w="70%">
+          {children}
+        </Box>
         {/* <RightSideBar /> */}
       </Box>
     </Box>

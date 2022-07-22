@@ -4,11 +4,10 @@ import { useDisclosure, ModalFooter, ModalBody } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import Modal from "./Modal";
 import List from "./List";
+import { Project } from "../types";
 
-interface Project {
-  id: string;
-  projectName: string;
-  projectColor: string;
+interface ILeftSideBarProps {
+  getProject: (project: Project) => void;
 }
 
 type ProjectName = string;
@@ -25,7 +24,7 @@ const COLORS_SCHEMA = [
   { id: uuidv4(), color: "#F93852" },
 ];
 
-function LeftSideBar(): JSX.Element {
+function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [projectName, setProjectName] = useState<ProjectName>("");
   const [projectColor, setProjectColor] = useState<ProjectColor>("");
@@ -39,39 +38,47 @@ function LeftSideBar(): JSX.Element {
     setProjectColor(color);
   };
 
+  const handleGetProject = (project: Project): void => {
+    getProject(project);
+  };
+
   const handleSubmit = (
     e: React.FormEvent<HTMLFormElement>,
     name: string,
     color: string
   ): void => {
     e.preventDefault();
-    const randomIndex = Math.floor(
-      Math.random() * (COLORS_SCHEMA.length - 1 - 0)
-    );
-    const randomColorSchema = COLORS_SCHEMA[randomIndex];
-    const { color: randomProjectColor } = randomColorSchema;
+    if (name) {
+      const randomIndex = Math.floor(
+        Math.random() * (COLORS_SCHEMA.length - 1 - 0)
+      );
+      const randomColorSchema = COLORS_SCHEMA[randomIndex];
+      const { color: randomProjectColor } = randomColorSchema;
 
-    setProjects((prev) => [
-      ...prev,
-      {
-        id: uuidv4(),
-        projectName: name,
-        projectColor: color ? color : randomProjectColor,
-      },
-    ]);
-    setProjectName("");
-    setProjectColor("");
-    onClose();
+      setProjects((prev) => [
+        ...prev,
+        {
+          id: uuidv4(),
+          projectName: name,
+          projectColor: color ? color : randomProjectColor,
+        },
+      ]);
+      setProjectName("");
+      setProjectColor("");
+      onClose();
+    } else {
+      onClose();
+    }
   };
 
   return (
-    <Box as="aside" w="33%" border="1px" borderColor="blue" position="relative">
+    <Box as="aside" w="30%" border="1px" borderColor="blue" position="relative">
       {projects.length > 0 && (
         <List
           flexDir="column"
           items={projects}
           renderItem={(item) => (
-            <HStack>
+            <HStack cursor="pointer" onClick={() => handleGetProject(item)}>
               <Circle size={6} bg={item.projectColor} />
               <p>{item.projectName}</p>
             </HStack>
