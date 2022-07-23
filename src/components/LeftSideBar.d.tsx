@@ -72,7 +72,13 @@ function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
   };
 
   return (
-    <Box as="aside" w="30%" border="1px" borderColor="blue" position="relative">
+    <Box
+      as="aside"
+      w="30%"
+      border="1px"
+      borderColor="whiteAlpha.600"
+      position="relative"
+    >
       {projects.length > 0 && (
         <List
           flexDir="column"

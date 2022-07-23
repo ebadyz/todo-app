@@ -13,10 +13,10 @@ function Layout({ children, leftSideBar }: ILayoutProps): JSX.Element {
       </header>
       <Box
         display="flex"
-        border="2px"
+        border="1px"
         w="90%"
         h="90vh"
-        borderColor="yellow.500"
+        borderColor="whiteAlpha.600"
         mx="auto"
       >
         {leftSideBar}
