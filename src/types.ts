@@ -1,4 +1,4 @@
-interface SubTask  {
+export interface SubTask  {
     id: string;
     title: string;
     description?: string;

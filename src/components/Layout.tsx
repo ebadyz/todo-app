@@ -20,7 +20,7 @@ function Layout({ children, leftSideBar }: ILayoutProps): JSX.Element {
         mx="auto"
       >
         {leftSideBar}
-        <Box as="main" p="8" w="70%">
+        <Box as="main" p="4" w="70%">
           {children}
         </Box>
         {/* <RightSideBar /> */}
