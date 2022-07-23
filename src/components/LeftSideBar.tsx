@@ -7,12 +7,13 @@ import List from "./List";
 import { Project } from "../types";
 
 interface ILeftSideBarProps {
-  getProject: (project: Project) => void;
+  handleSetSelectedProject: (project: Project) => void;
+  projects: Project[];
+  handleSetProjects: (project: Project) => void;
 }
 
 type ProjectName = string;
 type ProjectColor = string;
-type Projects = Project[];
 
 const COLORS_SCHEMA = [
   { id: uuidv4(), color: "#FFE11C" },
@@ -24,11 +25,14 @@ const COLORS_SCHEMA = [
   { id: uuidv4(), color: "#F93852" },
 ];
 
-function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
+function LeftSideBar({
+  handleSetSelectedProject,
+  projects,
+  handleSetProjects,
+}: ILeftSideBarProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [projectName, setProjectName] = useState<ProjectName>("");
   const [projectColor, setProjectColor] = useState<ProjectColor>("");
-  const [projects, setProjects] = useState<Projects>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setProjectName(e.target.value);
@@ -38,8 +42,8 @@ function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
     setProjectColor(color);
   };
 
-  const handleGetProject = (project: Project): void => {
-    getProject(project);
+  const handleSelectProject = (project: Project): void => {
+    handleSetSelectedProject(project);
   };
 
   const handleSubmit = (
@@ -54,15 +58,12 @@ function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
       );
       const randomColorSchema = COLORS_SCHEMA[randomIndex];
       const { color: randomProjectColor } = randomColorSchema;
-
-      setProjects((prev) => [
-        ...prev,
-        {
-          id: uuidv4(),
-          projectName: name,
-          projectColor: color ? color : randomProjectColor,
-        },
-      ]);
+      handleSetProjects({
+        id: uuidv4(),
+        projectName: name,
+        projectColor: color ? color : randomProjectColor,
+        subTasks: [],
+      });
       setProjectName("");
       setProjectColor("");
       onClose();
@@ -81,10 +82,15 @@ function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
     >
       {projects.length > 0 && (
         <List
+          display="flex"
           flexDir="column"
+          h="93.6%" //! TODO: find better way
+          overflow="auto"
+          gap="6"
+          p="4"
           items={projects}
           renderItem={(item) => (
-            <HStack cursor="pointer" onClick={() => handleGetProject(item)}>
+            <HStack cursor="pointer" onClick={() => handleSelectProject(item)}>
               <Circle size={6} bg={item.projectColor} />
               <p>{item.projectName}</p>
             </HStack>
@@ -97,7 +103,7 @@ function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
       <Modal isOpen={isOpen} onClose={onClose} title="Add Project">
         <form onSubmit={(e) => handleSubmit(e, projectName, projectColor)}>
           <ModalBody>
-            <VStack>
+            <VStack spacing={6}>
               <Input
                 type="text"
                 placeholder="New Project Name"
@@ -106,6 +112,7 @@ function LeftSideBar({ getProject }: ILeftSideBarProps): JSX.Element {
                 autoFocus
               />
               <List
+                display="flex"
                 items={COLORS_SCHEMA}
                 renderItem={(item) => (
                   <Circle
