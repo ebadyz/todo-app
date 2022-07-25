@@ -10,3 +10,7 @@ export interface Project {
     projectColor: string;
     subTasks?: SubTask[]
 }
+
+
+export type Projects = Project[]
+export type toggleRightSideBar = boolean

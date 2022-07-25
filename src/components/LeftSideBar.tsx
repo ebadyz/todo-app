@@ -4,11 +4,11 @@ import { useDisclosure, ModalFooter, ModalBody } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 import Modal from "./Modal";
 import List from "./List";
-import { Project } from "../types";
+import { Project, Projects } from "../types";
 
 interface ILeftSideBarProps {
   handleSetSelectedProject: (project: Project) => void;
-  projects: Project[];
+  projects: Projects;
   handleSetProjects: (project: Project) => void;
 }
 
