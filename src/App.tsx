@@ -13,19 +13,21 @@ import {
 } from "@chakra-ui/react";
 import Layout from "./components/Layout";
 import LeftSideBar from "./components/LeftSideBar";
-import { Project } from "./types";
+import { Project, Projects, toggleRightSideBar } from "./types";
 import theme from "./components/Theme";
 import { AddIcon } from "@chakra-ui/icons";
 import List from "./components/List";
 import { v4 as uuidv4 } from "uuid";
+import RightSideBar from "./components/RightSideBar";
 
-type Projects = Project[];
 type SubTaskTitle = string;
 
 function App(): JSX.Element {
   const [projects, setProjects] = useState<Projects>([]);
   const [project, setProject] = useState<Project | null>(null);
   const [subTaskTitle, setSubTaskTitle] = useState<SubTaskTitle>("");
+  const [toggleRightSideBar, setToggleRightSideBar] =
+    useState<toggleRightSideBar>(false);
 
   const handleSetSelectedProject = (project: Project): void => {
     setProject(project);
@@ -54,9 +56,15 @@ function App(): JSX.Element {
     setSubTaskTitle("");
   };
 
+  const handleSetToggle = (newState: boolean): void => {
+    setToggleRightSideBar(newState);
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <Layout
+        handleSetToggle={handleSetToggle}
+        rightSideBar={<RightSideBar toggle={toggleRightSideBar} />}
         leftSideBar={
           <LeftSideBar
             projects={projects}
@@ -66,7 +74,13 @@ function App(): JSX.Element {
         }
       >
         {project && Object.values(project).length > 0 && (
-          <VStack alignItems="flex-start" spacing={10} overflow="hidden">
+          <VStack
+            flex="1"
+            p="4"
+            alignItems="flex-start"
+            spacing={10}
+            overflow="hidden"
+          >
             <Heading as="h1" size="xl">
               {project.projectName}
             </Heading>
@@ -100,13 +114,17 @@ function App(): JSX.Element {
                     px="4"
                     bg="whiteAlpha.100"
                     h={12}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setToggleRightSideBar(true);
+                    }}
                   >
                     <Text>{item.title}</Text>
                   </Box>
                 )}
                 display="flex"
                 flexDir="column"
-                h="430px"
+                h="390px"
                 overflow="auto"
                 gap="3"
                 w="100%"
